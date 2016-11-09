@@ -9,6 +9,7 @@
  * This file is all you need (no autoloader loading external files)
  *
  * Based on: https://github.com/yampee/Redis/
+ * Copyright (c) 2013 Titouan Galopin
  */
 
 
