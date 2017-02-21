@@ -10,8 +10,8 @@ Simple Redis Client for PHP
 - No list or hash functions
 
 Usage:
-
+<pre>
 require_once 'redis_client.php';
 $redis = new Redis_Client('localhost', 6379);
-
+</pre>
 ...start using redis...
