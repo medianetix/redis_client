@@ -17,11 +17,13 @@ class Redis_Exception extends Exception
 {
 	protected $type;
 
+
 	public function __construct($type, $msg='')
 	{
 		$this->type = $type;
 		$this->message = sprintf("Redis-Exception (Type=%s): %s" , $type, $msg);
 	}
+
 
 	public function getType()
 	{
@@ -35,6 +37,7 @@ class Redis_Connection
 {
 	protected $socket;
 
+
 	public function __construct($host = 'localhost', $port = 6379)
 	{
 		$socket = fsockopen($host, $port, $errno, $errstr);
@@ -45,20 +48,24 @@ class Redis_Connection
 		$this->socket = $socket;
 	}
 
+
 	public function getSocket()
 	{
 		return $this->socket;
 	}
+
 
 	public function send($command)
 	{
 		return fwrite($this->socket, $command);
 	}
 
+
 	public function read()
 	{
 		return fgets($this->socket);
 	}
+
 
 	public function positionRead($position)
 	{
@@ -88,10 +95,12 @@ class Redis_Client
 		return $this->execute(array_merge(array($command), $arguments));
 	}
 
+
 	public function has($key)
 	{
 		return (boolean) $this->send('exists', array($key));
 	}
+
 
 	public function get($key)
 	{
@@ -102,6 +111,7 @@ class Redis_Client
 		return $this->send('get', array($key));
 	}
 
+
 	public function set($key, $value, $expire = null)
 	{
 		if (is_int($expire)) {
@@ -111,56 +121,68 @@ class Redis_Client
 		}
 	}
 
+
 	public function del($key)
 	{
 		return $this->send('del', array($key));
 	}
+
 
 	public function authenticate($password)
 	{
 		return $this->send('auth', array($password));
 	}
 
+
 	public function persist($key)
 	{
 		return $this->send('persist', array($key));
 	}
+
 
 	public function findKeys($pattern = '*')
 	{
 		return $this->send('keys', array($pattern));
 	}
 
+
 	public function flush()
 	{
 		return $this->send('flushdb');
 	}
+
 
 	public function getStats()
 	{
 		return $this->send('info');
 	}
 
+
 	public function getParameter($parameterName)
 	{
 		return $this->send('config', array('GET', $parameterName));
 	}
+
 
 	public function setParameter($parameterName, $value)
 	{
 		return $this->send('config', array('SET', $parameterName, $value));
 	}
 
+
 	public function getSize()
 	{
 		return $this->send('dbsize');
 	}
+
 
 	protected function connect()
 	{
 		$this->connection = new Redis_Connection($this->host, $this->port);
 		return $this;
 	}
+
+
 	protected function execute(array $arguments)
 	{
 		if (! $this->connection) {
@@ -178,6 +200,7 @@ class Redis_Client
 		}
 		return $this->response($command);
 	}
+
 
 	protected function response($command)
 	{
@@ -235,5 +258,4 @@ class Redis_Client
 				throw new Redis_Exception('error', 'Non-protocol answer: '.print_r($reply, 1));
 		}
 	}
-
 }// Redis_Client
